@@ -1,0 +1,186 @@
+resources:
+- '@type': type.googleapis.com/envoy.config.listener.v3.Listener
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 1443
+  filter_chains:
+  - filter_chain_match:
+      destination_port: 8080
+    filters:
+    - name: envoy.filters.network.tcp_proxy
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+        access_log:
+        - name: envoy.access_loggers.tcp_grpc
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.access_loggers.grpc.v3.TcpGrpcAccessLogConfig
+            common_config:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: grpc_als_cluster
+              log_name: 8080_tcp_in
+              transport_api_version: V3
+        cluster: 8080_tcp_in
+        stat_prefix: 8080_tcp_in
+  - filter_chain_match:
+      application_protocols:
+      - http/1.0
+      - http/1.1
+      destination_port: 8080
+    filters:
+    - name: envoy.filters.network.http_connection_manager
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+        access_log:
+        - name: envoy.access_loggers.http_grpc
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.access_loggers.grpc.v3.HttpGrpcAccessLogConfig
+            common_config:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: grpc_als_cluster
+              log_name: 8080_tcp_in
+              transport_api_version: V3
+        http_filters:
+        - name: envoy.filters.http.router
+        route_config:
+          name: local_route
+          virtual_hosts:
+          - domains:
+            - '*'
+            name: local_service
+            routes:
+            - match:
+                prefix: /
+              route:
+                cluster: 8080_tcp_in
+        stat_prefix: http
+  - filter_chain_match:
+      application_protocols:
+      - h2c
+      - h2
+      destination_port: 8080
+    filters:
+    - name: envoy.filters.network.http_connection_manager
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+        access_log:
+        - name: envoy.access_loggers.http_grpc
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.access_loggers.grpc.v3.HttpGrpcAccessLogConfig
+            common_config:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: grpc_als_cluster
+              log_name: 8080_tcp_in
+              transport_api_version: V3
+        http_filters:
+        - name: envoy.filters.http.router
+        route_config:
+          name: local_route
+          virtual_hosts:
+          - domains:
+            - '*'
+            name: local_service
+            routes:
+            - match:
+                prefix: /
+              route:
+                cluster: 8080_tcp_in_http2
+        stat_prefix: http2
+  - filter_chain_match:
+      destination_port: 8443
+    filters:
+    - name: envoy.filters.network.tcp_proxy
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+        access_log:
+        - name: envoy.access_loggers.tcp_grpc
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.access_loggers.grpc.v3.TcpGrpcAccessLogConfig
+            common_config:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: grpc_als_cluster
+              log_name: 8443_tcp_in
+              transport_api_version: V3
+        cluster: 8443_tcp_in
+        stat_prefix: 8443_tcp_in
+  - filter_chain_match:
+      application_protocols:
+      - http/1.0
+      - http/1.1
+      destination_port: 8443
+    filters:
+    - name: envoy.filters.network.http_connection_manager
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+        access_log:
+        - name: envoy.access_loggers.http_grpc
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.access_loggers.grpc.v3.HttpGrpcAccessLogConfig
+            common_config:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: grpc_als_cluster
+              log_name: 8443_tcp_in
+              transport_api_version: V3
+        http_filters:
+        - name: envoy.filters.http.router
+        route_config:
+          name: local_route
+          virtual_hosts:
+          - domains:
+            - '*'
+            name: local_service
+            routes:
+            - match:
+                prefix: /
+              route:
+                cluster: 8443_tcp_in
+        stat_prefix: http
+  - filter_chain_match:
+      application_protocols:
+      - h2c
+      - h2
+      destination_port: 8443
+    filters:
+    - name: envoy.filters.network.http_connection_manager
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+        access_log:
+        - name: envoy.access_loggers.http_grpc
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.access_loggers.grpc.v3.HttpGrpcAccessLogConfig
+            common_config:
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: grpc_als_cluster
+              log_name: 8443_tcp_in
+              transport_api_version: V3
+        http_filters:
+        - name: envoy.filters.http.router
+        route_config:
+          name: local_route
+          virtual_hosts:
+          - domains:
+            - '*'
+            name: local_service
+            routes:
+            - match:
+                prefix: /
+              route:
+                cluster: 8443_tcp_in_http2
+        stat_prefix: http2
+  listener_filters:
+  - name: envoy.filters.listener.original_dst
+    typed_config:
+      '@type': type.googleapis.com/envoy.extensions.filters.listener.original_dst.v3.OriginalDst
+  - name: envoy.filters.listener.tls_inspector
+    typed_config:
+      '@type': type.googleapis.com/envoy.extensions.filters.listener.tls_inspector.v3.TlsInspector
+  - name: envoy.filters.listener.http_inspector
+    typed_config:
+      '@type': type.googleapis.com/envoy.extensions.filters.listener.http_inspector.v3.HttpInspector
+  name: incoming_tcp

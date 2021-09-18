@@ -1,0 +1,65 @@
+resources:
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  connect_timeout: 5s
+  load_assignment:
+    cluster_name: 8080_tcp_in
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: 127.0.0.1
+              port_value: 8080
+  name: 8080_tcp_in
+  type: STRICT_DNS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  connect_timeout: 5s
+  load_assignment:
+    cluster_name: 8080_tcp_in_http2
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: 127.0.0.1
+              port_value: 8080
+  name: 8080_tcp_in_http2
+  type: STRICT_DNS
+  typed_extension_protocol_options:
+    envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+      '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+      explicit_http_config:
+        http2_protocol_options:
+          max_concurrent_streams: 1073741824
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  connect_timeout: 5s
+  load_assignment:
+    cluster_name: 8443_tcp_in
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: 127.0.0.1
+              port_value: 8443
+  name: 8443_tcp_in
+  type: STRICT_DNS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  connect_timeout: 5s
+  load_assignment:
+    cluster_name: 8443_tcp_in_http2
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: 127.0.0.1
+              port_value: 8443
+  name: 8443_tcp_in_http2
+  type: STRICT_DNS
+  typed_extension_protocol_options:
+    envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+      '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+      explicit_http_config:
+        http2_protocol_options:
+          max_concurrent_streams: 1073741824
