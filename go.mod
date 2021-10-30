@@ -1,5 +1,5 @@
-module github.com/velcrine/envoke
+module github.com/vorishirne/envoyconf-tools
 
 go 1.16
 
-require github.com/watergist/file-engine v1.3.2
+require github.com/vorishirne/goreader v1.11.1
