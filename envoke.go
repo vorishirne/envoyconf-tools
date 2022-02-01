@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "github.com/vorishirne/goreader/reader/structure"
+	. "github.com/watergist/file-engine/reader/structures"
 	"log"
 	"os"
 	"path"
@@ -18,7 +18,9 @@ func Envoke() {
 	}
 	targetFile := os.Args[1]
 
-	_, jsonLoaded := LoadJsonFile(targetFile+".json", &(nestedMapList{}))
+	jsonLoaded := LoadJsonFile(targetFile+".json", &(nestedMapList{}))
+
+	targetFile = path.Join("econf", targetFile)
 	err := os.MkdirAll(targetFile, 0744)
 	if err != nil {
 		log.Fatal(err)
