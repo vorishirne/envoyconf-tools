@@ -5,23 +5,28 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 )
 
 type nestedMapList map[string][]map[string]interface{}
 
 func main() {
-	Envoke()
-}
-func Envoke() {
 	if len(os.Args) == 1 {
 		log.Fatal("Where is the file to be processed?")
 	}
-	targetFile := os.Args[1]
+	for i := 1; i < len(os.Args); i++ {
+		Envoke(os.Args[i])
+	}
+}
+func Envoke(targetFile string) {
+	targetFile = strings.TrimSpace(targetFile)
+	if !strings.HasSuffix(targetFile, ".json") {
+		log.Fatalf("Why don't you give a json file instead of %v", targetFile)
+	}
+	jsonLoaded := LoadJsonFile(targetFile, &(nestedMapList{}))
+	targetDir := strings.TrimSuffix(targetFile, ".json")
 
-	jsonLoaded := LoadJsonFile(targetFile+".json", &(nestedMapList{}))
-
-	//	targetFile = path.Join("econf", targetFile)
-	err := os.MkdirAll(targetFile, 0744)
+	err := os.MkdirAll(targetDir, 0744)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,39 +34,40 @@ func Envoke() {
 	cache := map[string]interface{}{}
 	// this is the original structure of config_dump
 	arr := (*(jsonLoaded.(*nestedMapList)))["configs"]
+
 	bootStrap := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.BootstrapConfigDump")
 	if bootStrap != nil {
-		WriteYaml(path.Join(targetFile, "bootstrap.yaml"), processBootstrap(bootStrap, &cache))
+		WriteYaml(path.Join(targetDir, "bootstrap.yaml"), processBootstrap(bootStrap, &cache))
 	}
 
 	listeners := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ListenersConfigDump")
 	if listeners != nil {
-		WriteYaml(path.Join(targetFile, "listeners.yaml"),
+		WriteYaml(path.Join(targetDir, "listeners.yaml"),
 			map[string]interface{}{"resources": convertListeners(listeners)})
 	}
 
 	clusters := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ClustersConfigDump")
 	if clusters != nil {
-		WriteYaml(path.Join(targetFile, "clusters.yaml"),
+		WriteYaml(path.Join(targetDir, "clusters.yaml"),
 			map[string]interface{}{"resources": convertClusters(clusters)})
 	}
 
 	secrets := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.SecretsConfigDump")
 	if secrets != nil {
-		WriteYaml(path.Join(targetFile, "secrets.yaml"), convertSecrets(secrets))
+		WriteYaml(path.Join(targetDir, "secrets.yaml"), convertSecrets(secrets))
 	}
 
 	routes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.RoutesConfigDump")
 	if routes != nil {
-		WriteYaml(path.Join(targetFile, "routes.yaml"), convertRoutes(routes))
+		WriteYaml(path.Join(targetDir, "routes.yaml"), convertRoutes(routes))
 	}
 
 	scopedRoutes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ScopedRoutesConfigDump")
 	if scopedRoutes != nil {
-		WriteYaml(path.Join(targetFile, "scopedRoutes.yaml"), convertScopedRoutes(scopedRoutes))
+		WriteYaml(path.Join(targetDir, "scopedRoutes.yaml"), convertScopedRoutes(scopedRoutes))
 	}
 	//save cache
-	WriteYaml(path.Join(targetFile, "cache.yaml"), cache)
+	WriteYaml(path.Join(targetDir, "cache.yaml"), cache)
 }
 
 func convertClusters(clusters *map[string]interface{}) (newClusters []interface{}) {
