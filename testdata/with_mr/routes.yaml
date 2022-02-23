@@ -1,0 +1,7 @@
+- '@type': type.googleapis.com/envoy.config.route.v3.RouteConfiguration
+  name: http.9889
+  validate_clusters: false
+  virtual_hosts:
+  - domains:
+    - '*'
+    name: blackhole:9889

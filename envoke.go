@@ -20,13 +20,14 @@ func Envoke() {
 
 	jsonLoaded := LoadJsonFile(targetFile+".json", &(nestedMapList{}))
 
-	targetFile = path.Join("econf", targetFile)
+	//	targetFile = path.Join("econf", targetFile)
 	err := os.MkdirAll(targetFile, 0744)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	cache := map[string]interface{}{}
+	// this is the original structure of config_dump
 	arr := (*(jsonLoaded.(*nestedMapList)))["configs"]
 	bootStrap := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.BootstrapConfigDump")
 	if bootStrap != nil {
@@ -45,22 +46,22 @@ func Envoke() {
 			map[string]interface{}{"resources": convertClusters(clusters)})
 	}
 
-	//secrets := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.SecretsConfigDump")
-	//if secrets != nil {
-	//	WriteYaml(path.Join(targetFile, "secrets.yaml"), (*secrets)["dynamic_secrets"])
-	//}
-	//
-	//routes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.RoutesConfigDump")
-	//if routes != nil {
-	//	WriteYaml(path.Join(targetFile, "routes.yaml"), (*routes)["dynamic_route_configs"])
-	//}
-	//
-	//scopedRoutes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ScopedRoutesConfigDump")
-	//if scopedRoutes != nil {
-	//	WriteYaml(path.Join(targetFile, "scopedRoutes.yaml"), (*scopedRoutes)["dynamic_scoped_route_configs"])
-	//}
-	////save cache
-	//WriteYaml(path.Join(targetFile, "cache.yaml"), cache)
+	secrets := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.SecretsConfigDump")
+	if secrets != nil {
+		WriteYaml(path.Join(targetFile, "secrets.yaml"), convertSecrets(secrets))
+	}
+
+	routes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.RoutesConfigDump")
+	if routes != nil {
+		WriteYaml(path.Join(targetFile, "routes.yaml"), convertRoutes(routes))
+	}
+
+	scopedRoutes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ScopedRoutesConfigDump")
+	if scopedRoutes != nil {
+		WriteYaml(path.Join(targetFile, "scopedRoutes.yaml"), convertScopedRoutes(scopedRoutes))
+	}
+	//save cache
+	WriteYaml(path.Join(targetFile, "cache.yaml"), cache)
 }
 
 func convertClusters(clusters *map[string]interface{}) (newClusters []interface{}) {
@@ -74,23 +75,61 @@ func convertClusters(clusters *map[string]interface{}) (newClusters []interface{
 	return newClusters
 }
 
-func convertListeners(clusters *map[string]interface{}) (newClusters []interface{}) {
+func convertListeners(clusters *map[string]interface{}) (newListeners []interface{}) {
 	if v := (*clusters)["dynamic_listeners"]; v != nil {
 		for _, k := range v.([]interface{}) {
 			if v := k.(map[string]interface{})["active_state"]; v != nil {
 				if v := v.(map[string]interface{})["listener"]; v != nil {
-					newClusters = append(newClusters, v)
+					newListeners = append(newListeners, v)
 				}
 			}
 		}
 	}
-	return newClusters
+	return newListeners
+}
+
+func convertRoutes(routes *map[string]interface{}) (newRoutes []interface{}) {
+	if v := (*routes)["dynamic_route_configs"]; v != nil {
+		for _, k := range v.([]interface{}) {
+			if v := k.(map[string]interface{})["route_config"]; v != nil {
+				newRoutes = append(newRoutes, v)
+			}
+		}
+	}
+	return newRoutes
+}
+
+// this was never tested
+func convertScopedRoutes(staticRoutes *map[string]interface{}) (newStaticRoutes []interface{}) {
+	if v := (*staticRoutes)["dynamic_scoped_route_configs"]; v != nil {
+		for _, k := range v.([]interface{}) {
+			if v := k.(map[string]interface{})["static_route_config"]; v != nil {
+				newStaticRoutes = append(newStaticRoutes, v)
+			}
+		}
+	}
+	return newStaticRoutes
+}
+
+func convertSecrets(secrets *map[string]interface{}) (newSecrets []interface{}) {
+	if v := (*secrets)["dynamic_active_secrets"]; v != nil {
+		for _, k := range v.([]interface{}) {
+			if v := k.(map[string]interface{})["secret"]; v != nil {
+				newSecrets = append(newSecrets, v)
+			}
+		}
+	}
+	return newSecrets
 }
 
 func processBootstrap(bootStrap *map[string]interface{}, cache *map[string]interface{}) (bootStrapNew *map[string]interface{}) {
 	bootstrapConfig := (*bootStrap)["bootstrap"].(map[string]interface{})
-	(*cache)["dynamic_resources"] =
-		bootstrapConfig["dynamic_resources"]
+
+	(*cache)["dynamic_resources"] = bootstrapConfig["dynamic_resources"]
+	bootstrapConfig["dynamic_resources"] = map[string]map[string]string{
+		"cds_config": {"path": "./clusters.yaml"},
+		"lds_config": {"path": "./listeners.yaml"},
+	}
 
 	node := bootstrapConfig["node"].(map[string]interface{})
 	delete(node, "hidden_envoy_deprecated_build_version")
@@ -98,9 +137,11 @@ func processBootstrap(bootStrap *map[string]interface{}, cache *map[string]inter
 	(*cache)["user_agent_build_version"] = node["user_agent_build_version"]
 	delete(node, "user_agent_build_version")
 
-	bootstrapConfig["dynamic_resources"] = map[string]map[string]string{
-		"cds_config": {"path": "./clusters.yaml"},
-		"lds_config": {"path": "./listeners.yaml"},
-	}
 	return &bootstrapConfig
 }
+
+// prepare bootstrapConfig var which will have the entire bootstrap yaml
+// first we get config_dump's bootstrap part in bootstrapConfig
+// then update the dynamic_resources, and saving original one in cache
+// then copy the node's hashmap (only it's reference) to a separate variable
+// and use that to remove unwanted fields easily, instead of using original ds

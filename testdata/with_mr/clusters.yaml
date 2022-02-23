@@ -1,0 +1,2832 @@
+resources:
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  connect_timeout: 10s
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  name: BlackHoleCluster
+  type: STATIC
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15010||istiod.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  http2_protocol_options:
+    max_concurrent_streams: 1073741824
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15010
+        services:
+        - host: istiod.istio-system.svc.cluster.local
+          name: istiod
+          namespace: istio-system
+  name: outbound|15010||istiod.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          - h2
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istiod-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15010_._.istiod.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15012||istio-eastwestgateway.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15012
+        services:
+        - host: istio-eastwestgateway.istio-system.svc.cluster.local
+          name: istio-eastwestgateway
+          namespace: istio-system
+  name: outbound|15012||istio-eastwestgateway.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istio-eastwestgateway-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15012_._.istio-eastwestgateway.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15012||istiod.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15012
+        services:
+        - host: istiod.istio-system.svc.cluster.local
+          name: istiod
+          namespace: istio-system
+  name: outbound|15012||istiod.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istiod-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15012_._.istiod.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15014||istiod.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15014
+        services:
+        - host: istiod.istio-system.svc.cluster.local
+          name: istiod
+          namespace: istio-system
+  name: outbound|15014||istiod.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istiod-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15014_._.istiod.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15017||istio-eastwestgateway.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15017
+        services:
+        - host: istio-eastwestgateway.istio-system.svc.cluster.local
+          name: istio-eastwestgateway
+          namespace: istio-system
+  name: outbound|15017||istio-eastwestgateway.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istio-eastwestgateway-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15017_._.istio-eastwestgateway.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15021||istio-eastwestgateway.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15021
+        services:
+        - host: istio-eastwestgateway.istio-system.svc.cluster.local
+          name: istio-eastwestgateway
+          namespace: istio-system
+  name: outbound|15021||istio-eastwestgateway.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istio-eastwestgateway-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15021_._.istio-eastwestgateway.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|15443||istio-eastwestgateway.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 15443
+        services:
+        - host: istio-eastwestgateway.istio-system.svc.cluster.local
+          name: istio-eastwestgateway
+          namespace: istio-system
+  name: outbound|15443||istio-eastwestgateway.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istio-eastwestgateway-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.15443_._.istio-eastwestgateway.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|2020||sumo-collection-fluent-bit-metrics.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 2020
+        services:
+        - host: sumo-collection-fluent-bit-metrics.engops.svc.cluster.local
+          name: sumo-collection-fluent-bit-metrics
+          namespace: engops
+  name: outbound|2020||sumo-collection-fluent-bit-metrics.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/sumo-collection-fluent-bit
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.2020_._.sumo-collection-fluent-bit-metrics.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|2181||zoo1.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 2181
+        services:
+        - host: zoo1.ncx-system.svc.cluster.local
+          name: zoo1
+          namespace: ncx-system
+  name: outbound|2181||zoo1.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.2181_._.zoo1.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|24224||ncx-fluentd-remote.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 24224
+        services:
+        - host: ncx-fluentd-remote.ncx-system.svc.cluster.local
+          name: ncx-fluentd-remote
+          namespace: ncx-system
+  name: outbound|24224||ncx-fluentd-remote.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.24224_._.ncx-fluentd-remote.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|24231||sumo-collection-sumologic-fluentd-logs-headless.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 24231
+        services:
+        - host: sumo-collection-sumologic-fluentd-logs-headless.engops.svc.cluster.local
+          name: sumo-collection-sumologic-fluentd-logs-headless
+          namespace: engops
+  name: outbound|24231||sumo-collection-sumologic-fluentd-logs-headless.engops.svc.cluster.local
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|24231||sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 24231
+        services:
+        - host: sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+          name: sumo-collection-sumologic-fluentd-logs
+          namespace: engops
+  name: outbound|24231||sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/sumo-collection-sumologic
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.24231_._.sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|24321||sumo-collection-sumologic-fluentd-logs-headless.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 24321
+        services:
+        - host: sumo-collection-sumologic-fluentd-logs-headless.engops.svc.cluster.local
+          name: sumo-collection-sumologic-fluentd-logs-headless
+          namespace: engops
+  name: outbound|24321||sumo-collection-sumologic-fluentd-logs-headless.engops.svc.cluster.local
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|24321||sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 24321
+        services:
+        - host: sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+          name: sumo-collection-sumologic-fluentd-logs
+          namespace: engops
+  name: outbound|24321||sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/sumo-collection-sumologic
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.24321_._.sumo-collection-sumologic-fluentd-logs.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|2888||zoo1.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 2888
+        services:
+        - host: zoo1.ncx-system.svc.cluster.local
+          name: zoo1
+          namespace: ncx-system
+  name: outbound|2888||zoo1.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.2888_._.zoo1.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|3888||zoo1.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 3888
+        services:
+        - host: zoo1.ncx-system.svc.cluster.local
+          name: zoo1
+          namespace: ncx-system
+  name: outbound|3888||zoo1.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.3888_._.zoo1.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|443||cp-nginx-ingress-controller.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 443
+        services:
+        - host: cp-nginx-ingress-controller.engops.svc.cluster.local
+          name: cp-nginx-ingress-controller
+          namespace: engops
+  name: outbound|443||cp-nginx-ingress-controller.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cp-nginx-ingress
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.443_._.cp-nginx-ingress-controller.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|443||istiod.istio-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 443
+        services:
+        - host: istiod.istio-system.svc.cluster.local
+          name: istiod
+          namespace: istio-system
+  name: outbound|443||istiod.istio-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/istio-system/sa/istiod-service-account
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.443_._.istiod.istio-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|443||kubernetes-dashboard.kube-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 443
+        services:
+        - host: kubernetes-dashboard.kube-system.svc.cluster.local
+          name: kubernetes-dashboard
+          namespace: kube-system
+  name: outbound|443||kubernetes-dashboard.kube-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/kube-system/sa/kubernetes-dashboard
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.443_._.kubernetes-dashboard.kube-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|443||kubernetes.default.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 443
+        services:
+        - host: kubernetes.default.svc.cluster.local
+          name: kubernetes
+          namespace: default
+  name: outbound|443||kubernetes.default.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context: {}
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.443_._.kubernetes.default.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|443||metrics-server.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 443
+        services:
+        - host: metrics-server.engops.svc.cluster.local
+          name: metrics-server
+          namespace: engops
+  name: outbound|443||metrics-server.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/metrics-server
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.443_._.metrics-server.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|5005||cp-datadog-cluster-agent.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 5005
+        services:
+        - host: cp-datadog-cluster-agent.engops.svc.cluster.local
+          name: cp-datadog-cluster-agent
+          namespace: engops
+  name: outbound|5005||cp-datadog-cluster-agent.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cp-datadog-cluster-agent
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.5005_._.cp-datadog-cluster-agent.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|53||kube-dns.kube-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 53
+        services:
+        - host: kube-dns.kube-system.svc.cluster.local
+          name: kube-dns
+          namespace: kube-system
+  name: outbound|53||kube-dns.kube-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/kube-system/sa/coredns
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.53_._.kube-dns.kube-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|5432||ncx-postgres.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 5432
+        services:
+        - host: ncx-postgres.ncx-system.svc.cluster.local
+          name: ncx-postgres
+          namespace: ncx-system
+  name: outbound|5432||ncx-postgres.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.5432_._.ncx-postgres.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|7979||external-dns.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 7979
+        services:
+        - host: external-dns.engops.svc.cluster.local
+          name: external-dns
+          namespace: engops
+  name: outbound|7979||external-dns.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/external-dns
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.7979_._.external-dns.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|8000||httpbin.ncx-pdandekhya.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 8000
+        services:
+        - host: httpbin.ncx-pdandekhya.svc.cluster.local
+          name: httpbin
+          namespace: ncx-pdandekhya
+  name: outbound|8000||httpbin.ncx-pdandekhya.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-pdandekhya/sa/httpbin
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.8000_._.httpbin.ncx-pdandekhya.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|8080||cp-datadog-kube-state-metrics.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 8080
+        services:
+        - host: cp-datadog-kube-state-metrics.engops.svc.cluster.local
+          name: cp-datadog-kube-state-metrics
+          namespace: engops
+  name: outbound|8080||cp-datadog-kube-state-metrics.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cp-datadog-kube-state-metrics
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.8080_._.cp-datadog-kube-state-metrics.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|8085||cluster-autoscaler-scale-down-disabled.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 8085
+        services:
+        - host: cluster-autoscaler-scale-down-disabled.engops.svc.cluster.local
+          name: cluster-autoscaler-scale-down-disabled
+          namespace: engops
+  name: outbound|8085||cluster-autoscaler-scale-down-disabled.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cluster-autoscaler-scale-down-disabled
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.8085_._.cluster-autoscaler-scale-down-disabled.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|8085||cluster-autoscaler.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 8085
+        services:
+        - host: cluster-autoscaler.engops.svc.cluster.local
+          name: cluster-autoscaler
+          namespace: engops
+  name: outbound|8085||cluster-autoscaler.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cluster-autoscaler
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.8085_._.cluster-autoscaler.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|80||cp-nginx-ingress-controller.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 80
+        services:
+        - host: cp-nginx-ingress-controller.engops.svc.cluster.local
+          name: cp-nginx-ingress-controller
+          namespace: engops
+  name: outbound|80||cp-nginx-ingress-controller.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cp-nginx-ingress
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.80_._.cp-nginx-ingress-controller.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|80||cp-nginx-ingress-cradlepoint-backend.engops.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 80
+        services:
+        - host: cp-nginx-ingress-cradlepoint-backend.engops.svc.cluster.local
+          name: cp-nginx-ingress-cradlepoint-backend
+          namespace: engops
+  name: outbound|80||cp-nginx-ingress-cradlepoint-backend.engops.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/engops/sa/cp-nginx-ingress-backend
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.80_._.cp-nginx-ingress-cradlepoint-backend.engops.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|80||dashboard.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 80
+        services:
+        - host: dashboard.ncx-system.svc.cluster.local
+          name: dashboard
+          namespace: ncx-system
+  name: outbound|80||dashboard.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.80_._.dashboard.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|80||ncx-visibility-fluentd.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 80
+        services:
+        - host: ncx-visibility-fluentd.ncx-system.svc.cluster.local
+          name: ncx-visibility-fluentd
+          namespace: ncx-system
+  name: outbound|80||ncx-visibility-fluentd.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.80_._.ncx-visibility-fluentd.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|80||sleep.default.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 80
+        services:
+        - host: sleep.default.svc.cluster.local
+          name: sleep
+          namespace: default
+  name: outbound|80||sleep.default.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/default/sa/sleep
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.80_._.sleep.default.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|80||sleep.ncx-pdandekhya.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 80
+        services:
+        - host: sleep.ncx-pdandekhya.svc.cluster.local
+          name: sleep
+          namespace: ncx-pdandekhya
+  name: outbound|80||sleep.ncx-pdandekhya.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-pdandekhya/sa/sleep
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.80_._.sleep.ncx-pdandekhya.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|9092||kafka-service.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 9092
+        services:
+        - host: kafka-service.ncx-system.svc.cluster.local
+          name: kafka-service
+          namespace: ncx-system
+  name: outbound|9092||kafka-service.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.9092_._.kafka-service.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|9102||ncx-statsd-exporter.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 9102
+        services:
+        - host: ncx-statsd-exporter.ncx-system.svc.cluster.local
+          name: ncx-statsd-exporter
+          namespace: ncx-system
+  name: outbound|9102||ncx-statsd-exporter.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.9102_._.ncx-statsd-exporter.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  eds_cluster_config:
+    eds_config:
+      ads: {}
+      resource_api_version: V3
+    service_name: outbound|9125||ncx-statsd-exporter.ncx-system.svc.cluster.local
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  metadata:
+    filter_metadata:
+      istio:
+        default_original_port: 9125
+        services:
+        - host: ncx-statsd-exporter.ncx-system.svc.cluster.local
+          name: ncx-statsd-exporter
+          namespace: ncx-system
+  name: outbound|9125||ncx-statsd-exporter.ncx-system.svc.cluster.local
+  transport_socket_matches:
+  - match:
+      tlsMode: istio
+    name: tlsMode-istio
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        common_tls_context:
+          alpn_protocols:
+          - istio-peer-exchange
+          - istio
+          combined_validation_context:
+            default_validation_context:
+              match_subject_alt_names:
+              - exact: spiffe://cluster.local/ns/ncx-system/sa/default
+            validation_context_sds_secret_config:
+              name: ROOTCA
+              sds_config:
+                api_config_source:
+                  api_type: GRPC
+                  grpc_services:
+                  - envoy_grpc:
+                      cluster_name: sds-grpc
+                  set_node_on_first_message_only: true
+                  transport_api_version: V3
+                initial_fetch_timeout: 0s
+                resource_api_version: V3
+          tls_certificate_sds_secret_configs:
+          - name: default
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              initial_fetch_timeout: 0s
+              resource_api_version: V3
+        sni: outbound_.9125_._.ncx-statsd-exporter.ncx-system.svc.cluster.local
+  - match: {}
+    name: tlsMode-disabled
+    transport_socket:
+      name: envoy.transport_sockets.raw_buffer
+  type: EDS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  circuit_breakers:
+    thresholds:
+    - max_connections: 4294967295
+      max_pending_requests: 4294967295
+      max_requests: 4294967295
+      max_retries: 4294967295
+  connect_timeout: 10s
+  dns_lookup_family: V4_ONLY
+  dns_refresh_rate: 5s
+  filters:
+  - name: istio.metadata_exchange
+    typed_config:
+      '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+      type_url: type.googleapis.com/envoy.tcp.metadataexchange.config.MetadataExchange
+      value:
+        protocol: istio-peer-exchange
+  load_assignment:
+    cluster_name: outbound|9889||youtube.com
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: youtube.com
+              port_value: 9889
+        load_balancing_weight: 1
+      load_balancing_weight: 1
+      locality: {}
+  metadata:
+    filter_metadata:
+      istio:
+        config: /apis/networking.istio.io/v1alpha3/namespaces/ncx-01fte0nt2930g669x69n87n6da/destination-rule/dr-01ftqq2dkt6109hn4v5bhmze3a
+        default_original_port: 9889
+        services:
+        - host: youtube.com
+          name: youtube.com
+          namespace: ncx-01fte0nt2930g669x69n87n6da
+  name: outbound|9889||youtube.com
+  respect_dns_ttl: true
+  transport_socket:
+    name: envoy.transport_sockets.tls
+    typed_config:
+      '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+      common_tls_context:
+        combined_validation_context:
+          default_validation_context: {}
+          validation_context_sds_secret_config:
+            name: file-root:/etc/ssl/certs/ca-certificates.crt
+            sds_config:
+              api_config_source:
+                api_type: GRPC
+                grpc_services:
+                - envoy_grpc:
+                    cluster_name: sds-grpc
+                set_node_on_first_message_only: true
+                transport_api_version: V3
+              resource_api_version: V3
+  type: STRICT_DNS

@@ -1,0 +1,24 @@
+dynamic_resources:
+  ads_config:
+    api_type: GRPC
+    grpc_services:
+    - envoy_grpc:
+        cluster_name: xds-grpc
+    set_node_on_first_message_only: true
+    transport_api_version: V3
+  cds_config:
+    ads: {}
+    resource_api_version: V3
+  lds_config:
+    ads: {}
+    resource_api_version: V3
+user_agent_build_version:
+  metadata:
+    build.type: RELEASE
+    revision.sha: 089b5330862612c073e073690d9ff29bb06580db
+    revision.status: Clean
+    ssl.version: BoringSSL
+  version:
+    major_number: 1
+    minor_number: 17
+    patch: 1
