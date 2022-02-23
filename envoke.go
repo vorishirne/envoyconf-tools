@@ -54,17 +54,17 @@ func Envoke(targetFile string) {
 
 	secrets := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.SecretsConfigDump")
 	if secrets != nil {
-		WriteYaml(path.Join(targetDir, "secrets.yaml"), convertSecrets(secrets))
+		WriteYaml(path.Join(targetDir, "secrets.yaml"), map[string]interface{}{"resources": convertSecrets(secrets)})
 	}
 
 	routes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.RoutesConfigDump")
 	if routes != nil {
-		WriteYaml(path.Join(targetDir, "routes.yaml"), convertRoutes(routes))
+		WriteYaml(path.Join(targetDir, "routes.yaml"), map[string]interface{}{"resources": convertRoutes(routes)})
 	}
 
 	scopedRoutes := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ScopedRoutesConfigDump")
 	if scopedRoutes != nil {
-		WriteYaml(path.Join(targetDir, "scopedRoutes.yaml"), convertScopedRoutes(scopedRoutes))
+		WriteYaml(path.Join(targetDir, "scopedRoutes.yaml"), map[string]interface{}{"resources": convertScopedRoutes(scopedRoutes)})
 	}
 	//save cache
 	WriteYaml(path.Join(targetDir, "cache.yaml"), cache)
