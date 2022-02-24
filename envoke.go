@@ -18,6 +18,7 @@ func main() {
 		Envoke(os.Args[i])
 	}
 }
+
 func Envoke(targetFile string) {
 	targetFile = strings.TrimSpace(targetFile)
 	if !strings.HasSuffix(targetFile, ".json") {
@@ -31,19 +32,22 @@ func Envoke(targetFile string) {
 		log.Fatal(err)
 	}
 
-	cache := map[string]interface{}{}
 	// this is the original structure of config_dump
 	arr := (*(jsonLoaded.(*nestedMapList)))["configs"]
 
 	bootStrap := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.BootstrapConfigDump")
 	if bootStrap != nil {
-		WriteYaml(path.Join(targetDir, "bootstrap.yaml"), processBootstrap(bootStrap, &cache))
+		WriteYaml(path.Join(targetDir, "bootstrap.yaml"), processBootstrap(bootStrap))
 	}
 
 	listeners := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ListenersConfigDump")
 	if listeners != nil {
-		WriteYaml(path.Join(targetDir, "listeners.yaml"),
+		WriteYaml(path.Join(targetDir, "listeners_active.yaml"),
 			map[string]interface{}{"resources": convertListeners(listeners)})
+	}
+	if listeners != nil {
+		WriteYaml(path.Join(targetDir, "listeners_errored.yaml"),
+			map[string]interface{}{"resources": convertErroredListeners(listeners)})
 	}
 
 	clusters := SelectKey(&arr, "@type", "type.googleapis.com/envoy.admin.v3.ClustersConfigDump")
@@ -67,7 +71,7 @@ func Envoke(targetFile string) {
 		WriteYaml(path.Join(targetDir, "scopedRoutes.yaml"), map[string]interface{}{"resources": convertScopedRoutes(scopedRoutes)})
 	}
 	//save cache
-	WriteYaml(path.Join(targetDir, "cache.yaml"), cache)
+	WriteYaml(path.Join(targetDir, "zConfig.yaml"), jsonLoaded)
 }
 
 func convertClusters(clusters *map[string]interface{}) (newClusters []interface{}) {
@@ -81,13 +85,24 @@ func convertClusters(clusters *map[string]interface{}) (newClusters []interface{
 	return newClusters
 }
 
-func convertListeners(clusters *map[string]interface{}) (newListeners []interface{}) {
-	if v := (*clusters)["dynamic_listeners"]; v != nil {
+func convertListeners(listeners *map[string]interface{}) (newListeners []interface{}) {
+	if v := (*listeners)["dynamic_listeners"]; v != nil {
 		for _, k := range v.([]interface{}) {
 			if v := k.(map[string]interface{})["active_state"]; v != nil {
 				if v := v.(map[string]interface{})["listener"]; v != nil {
 					newListeners = append(newListeners, v)
 				}
+			}
+		}
+	}
+	return newListeners
+}
+
+func convertErroredListeners(listeners *map[string]interface{}) (newListeners []interface{}) {
+	if v := (*listeners)["dynamic_listeners"]; v != nil {
+		for _, k := range v.([]interface{}) {
+			if v := k.(map[string]interface{})["error_state"]; v != nil {
+				newListeners = append(newListeners, k)
 			}
 		}
 	}
@@ -128,19 +143,17 @@ func convertSecrets(secrets *map[string]interface{}) (newSecrets []interface{}) 
 	return newSecrets
 }
 
-func processBootstrap(bootStrap *map[string]interface{}, cache *map[string]interface{}) (bootStrapNew *map[string]interface{}) {
+func processBootstrap(bootStrap *map[string]interface{}) (bootStrapNew *map[string]interface{}) {
 	bootstrapConfig := (*bootStrap)["bootstrap"].(map[string]interface{})
 
-	(*cache)["dynamic_resources"] = bootstrapConfig["dynamic_resources"]
 	bootstrapConfig["dynamic_resources"] = map[string]map[string]string{
 		"cds_config": {"path": "./clusters.yaml"},
-		"lds_config": {"path": "./listeners.yaml"},
+		"lds_config": {"path": "./listeners_active.yaml"},
 	}
 
 	node := bootstrapConfig["node"].(map[string]interface{})
 	delete(node, "hidden_envoy_deprecated_build_version")
 	delete(node, "extensions")
-	(*cache)["user_agent_build_version"] = node["user_agent_build_version"]
 	delete(node, "user_agent_build_version")
 
 	return &bootstrapConfig
